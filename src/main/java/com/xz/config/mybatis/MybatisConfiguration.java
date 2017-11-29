@@ -64,8 +64,7 @@ public class MybatisConfiguration implements TransactionManagementConfigurer{
 			sessionFactoryBean.setTypeAliasesPackage(typeAliasesPackage);
 			
 			// 配置mapper.xml文件
-			Resource[] resources = new PathMatchingResourcePatternResolver()
-					.getResources(mapperLocations);
+			Resource[] resources = new PathMatchingResourcePatternResolver().getResources(mapperLocations);
 			sessionFactoryBean.setMapperLocations(resources);
 
 //			加载mybatis全局配置文件

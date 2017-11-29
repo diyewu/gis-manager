@@ -8,7 +8,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xz.Application;
-import com.xz.dao.TuserMapper;
+import com.xz.dao.UserLoginMapper;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 
@@ -20,11 +20,11 @@ import com.xz.dao.TuserMapper;
 public class UtilTest {
 
 	@Autowired
-	private TuserMapper userMapper;
+	private UserLoginMapper userMapper;
 
 	@Test
 	public void test1() {
-		userMapper.selectByPrimaryKey(1L);
+		userMapper.selectByPrimaryKey("2bb49d9d514c48c5bebbf78beab3e179");
 	}
 
 	@Test
