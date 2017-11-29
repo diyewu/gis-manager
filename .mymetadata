@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="gis-manager"
+  id="myeclipse.1511922686834"
+  context-root="/gis-manager"
+  j2ee-spec="6.0"
+  archive="gis-manager.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+
