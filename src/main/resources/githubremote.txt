@@ -1,0 +1,4 @@
+https://github.com/diyewu/gis-manager.git
+diyewu
+wu6586309
+refs/heads/master
