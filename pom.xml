@@ -142,10 +142,8 @@
 
 	</dependencies>
 	<build>
-		<finalName>/</finalName>
-
+		<finalName>gismgr</finalName>
 		<plugins>
-
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -158,19 +156,20 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+			<plugin>
+	            <groupId>org.apache.maven.plugins</groupId>
+	            <artifactId>maven-war-plugin</artifactId>
+	            <configuration>
+	                <webResources>
+	                    <resource>
+	                        <directory>WebContent</directory>
+	                    </resource>
+	                </webResources>
+	            </configuration>
+        	</plugin>
 
 		</plugins>
 
 	</build>
 
-	<repositories>
-		<repository>
-			<id>ali</id>
-			<name>ali Repository</name>
-			<url>http://maven.aliyun.com/nexus/content/groups/public/</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
-	</repositories>
 </project>

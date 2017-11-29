@@ -44,12 +44,14 @@ session.removeAttribute("userName");
 		}else if(userpwd == null || userpwd == ""){
 			jAlert("请输入密码", '提示');
 		}else{
-			$.post(path+"/login!login.action",{"userName":username,"userPwd":userpwd},function(data){
-				if("success" == data.i_type){
+			$.post(path+"/userlogin/checkUser/",{"userName":username,"userPwd":userpwd},function(data){
+				console.log(data);
+				if(true == data.success){
 					//跳转
+					console.log(pathName+".jsp");
 					window.location.href = pathName+".jsp";
 				}else{
-					jAlert(data.i_msg, '提示');
+					jAlert(data.msg, '提示');
 				}
 			},"json");
 		}

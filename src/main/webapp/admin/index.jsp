@@ -2,7 +2,7 @@
 <%
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
-String userRole = (String)session.getAttribute("userRole");
+String userRole = session.getAttribute("userRole")+"";
 boolean isNotAdmin = !"0".equals(userRole);
 %>
 <html>
