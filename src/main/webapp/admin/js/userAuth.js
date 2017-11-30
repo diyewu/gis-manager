@@ -11,11 +11,11 @@
    		    }  
    		}); 
    		
-   		var qrUrl = path + "/user!";
+   		var qrUrl = path + "/user/";
    		var order;
 //   		var sm = new Ext.grid.CheckboxSelectionModel();
         store = new Ext.data.Store({
-			url : qrUrl+"listRole.action",
+			url : qrUrl+"listRole",
 			reader : new Ext.data.JsonReader({
 				root : 'products',
 				totalProperty : 'totalCount',
@@ -310,7 +310,7 @@
     			width:150,
     			lines:true,
     			loader: new Ext.tree.TreeLoader({
-    				url: path+'/user!getAuthTree.action?roleId='+roleId,
+    				url: path+'/user/getAuthTree?roleId='+roleId,
 //    			        url: '../admin/js/tree.txt',
     				requestMethod: 'GET'
     			}),

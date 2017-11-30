@@ -11,7 +11,7 @@
    		    }  
    		}); 
    		
-   		var qrUrl = path + "/user!";
+   		var qrUrl = path + "/user/";
    		var order;
         store = new Ext.data.Store({
 			url : qrUrl+"listUser.action",
@@ -96,7 +96,7 @@
 		//用户角色
 		var moduleStore = new Ext.data.Store({
 	        proxy: new Ext.data.HttpProxy({
-	            url: path + "/user!getRole.action?all="+1 //这里是参数可以顺便写,这个数据源是在第一个下拉框select的时候load的
+	            url: path + "/user/getRole.action?all="+1 //这里是参数可以顺便写,这个数据源是在第一个下拉框select的时候load的
 	        }),
 	        reader: new Ext.data.JsonReader({
         	root : 'products',
@@ -283,7 +283,7 @@
     	//用户角色
 		var _moduleStore = new Ext.data.Store({
 	        proxy: new Ext.data.HttpProxy({
-	            url: path + "/user!getRole.action?all="+0 //这里是参数可以顺便写,这个数据源是在第一个下拉框select的时候load的
+	            url: path + "/user/getRole.action?all="+0 //这里是参数可以顺便写,这个数据源是在第一个下拉框select的时候load的
 	        }),
 	        reader: new Ext.data.JsonReader({
         	root : 'products',
@@ -352,7 +352,7 @@
     				}
     				console.log(co);
     				Ext.Ajax.request({
-    					  url : path + "/user!editUser.action",
+    					  url : path + "/user/editUser.action",
     					  method : 'post',
     					  params : {
     						  userId:_userId,
@@ -372,7 +372,7 @@
     					   }
     					  },
     					  failure : function() {
-    						  Ext.Msg.alert('提示', '删除失败'); 
+    						  Ext.Msg.alert('提示', '操作失败'); 
     					  }
     		 		});
 //    				_fileForm.submit({  

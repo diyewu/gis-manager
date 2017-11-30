@@ -1,5 +1,4 @@
 		function loginOut(){
-//			window.location.href("login.jsp");
 			window.location.href = "../admin/login.jsp?pathName=index";
 		}
   		Ext.onReady(function(){
@@ -67,14 +66,13 @@
  		           	activeItem: 0,
  		           	collapseFirst: false,
  		            loader: new Ext.tree.TreeLoader({
- 					        url: path+'/user!getTree.action',
-// 					        url: '../admin/js/tree.txt',
+ 					        url: path+'/user/getTree',
  					        requestMethod: 'GET'
  				    		}),
  				    listeners:{beforeclick:synb,click:sync},
  				    //构造根节点
  					root: new Ext.tree.AsyncTreeNode({
- 					    id: 'root',
+ 					    id: 'data',
  					    text: '菜单',
  						expanded: true
  					})

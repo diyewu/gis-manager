@@ -2,9 +2,7 @@ package com.xz.controller;
 
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -49,7 +47,6 @@ public class UserLoginController {
 		UserLogin userLogin = userLoginService.checkUserExist(user);
 		session.setAttribute("isLogin", "0");
 		session.setAttribute("userName", userLogin.getUserName());
-		List<UserLogin> list = new ArrayList<UserLogin>();
 		Map<String, String> condition = new HashMap<String, String>();
 		condition.put("userName", userLogin.getUserName());
 		condition.put("userPwd", userLogin.getUserPassword());
@@ -59,6 +56,7 @@ public class UserLoginController {
 		session.setAttribute("userId", userLogin.getId());
 		return new JsonModel(true, userLogin);
 	}
+	
 	
 	/**
 	 * 功能：公共方法用于响应前台请求
