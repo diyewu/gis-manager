@@ -71,6 +71,6 @@ $(document).ready(function () {
         }
     })
     $("#loginBtn_").click(function(){
-    	window.location.href="main.jsp";
+    	window.location.href="index.jsp";
     });
 });

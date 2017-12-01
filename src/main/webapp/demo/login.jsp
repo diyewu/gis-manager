@@ -24,7 +24,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     }); 
     function changeImg(){
         var img = document.getElementById("img"); 
-        img.src = "<%=path%>/authImage?date=" + new Date();;
+        img.src = "<%=path%>/authimg/generateImage?date=" + new Date();;
     } 
 </script>
 </head>
@@ -50,7 +50,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         <div class="inputBox codeBox">
             <input type="text" class="form-control" placeholder="请输入验证码" aria-describedby="basic-addon1">
             <!-- <img src="img/code.jpg" alt="code"> -->
-            <img id="img" src="<%=path%>/authImage" onclick="javascript:changeImg()" alt="点击切换"/>
+            <img id="img" src="<%=path%>/authimg/generateImage" onclick="javascript:changeImg()" alt="点击切换"/>
         </div>
         <div class="inputBox pwdBox">
 			<button type="button" style="width: 100%;" class="btn btn-secondary" id="loginBtn_">登录</button>

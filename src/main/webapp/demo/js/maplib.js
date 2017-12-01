@@ -456,10 +456,8 @@ var BMapLib = window.BMapLib = BMapLib || {};
 		this._isReal = false; //真的是个聚合
         this._styles = markerClusterer.getStyles();
         this._labels = [];
-        this._clusterMarker = new BMapLib.TextIconOverlay(this._center, 
-        		{name:'共找到',value : this._markers.length}, 
-        		{"styles":this._markerClusterer.getStyles()});
-//        this._map.addOverlay(this._clusterMarker);
+        this._clusterMarker = new BMapLib.TextIconOverlay(this._center, {name:'共找到',value : this._markers.length}, {"styles":this._markerClusterer.getStyles()});
+        //this._map.addOverlay(this._clusterMarker);
     }
 
     /**
@@ -499,6 +497,8 @@ var BMapLib = window.BMapLib = BMapLib || {};
             }
 
         }
+//        marker.addEventListener("click",attribute(marker));
+        
         this._map.addOverlay(this._clusterMarker);
 		this._isReal = true;
         this.updateClusterMarker();
@@ -551,19 +551,19 @@ var BMapLib = window.BMapLib = BMapLib || {};
     Cluster.prototype.addLabel = function (marker) {
         //获取marker的坐标
         var position = marker.getPosition();
+//        console.log(position);
         //创建label
         var label = new BMap.Label({position : position});
         label.setStyle({
             height : '25px',
-            color : "#f0ffff",
-            backgroundColor : this._styles[0].backgroundColor,
+            color : "#0000ff",
+            //backgroundColor : this._styles[0].backgroundColor,
             border : 'none',
             borderRadius : "25px",
             fontWeight : 'bold',
         });
-        var content = '<span style="color:'+
-        this._styles[0].backgroundColor+'"><i class="fa fa-map-marker"></i></span>'+
-        '<p style="padding:0px 13px;text-align:center;margin-top:5px;">这是'+position+'</p>';
+        var content = '<span style="color:'+this._styles[0].backgroundColor+'"><i class="fa fa-map-marker"></i></span>'+
+        '<p style="padding:0px 13px;text-align:center;margin-top:5px;">哈哈这是'+position.lng+','+position.lat+'</p>';
         label.setContent(content)
         label.setPosition(position);
         this._labels.push(label);
@@ -577,7 +577,7 @@ var BMapLib = window.BMapLib = BMapLib || {};
         if (this._map.getZoom() > this._markerClusterer.getMaxZoom()) {
             this._clusterMarker && this._map.removeOverlay(this._clusterMarker);
             for (var i = 0, marker; marker = this._markers[i]; i++) {
-                //this._map.addOverlay(marker);
+                this._map.addOverlay(marker);
                 this.addLabel(marker);
             }
             return;
