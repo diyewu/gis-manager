@@ -11,7 +11,7 @@
    		    }  
    		}); 
    		
-   		var qrUrl = path + "/operate!";
+   		var qrUrl = path + "/operate/";
    		var order;
         store = new Ext.data.Store({
 			url : qrUrl+"listForLogin.action",
@@ -182,57 +182,4 @@
 			},
 			scope: store
 		});
-	}
-	
-	
-	function saveInfo(oldName,newName,_id){
-		//console.log(_id);
-		if(oldName != newName){
-			Ext.Msg.confirm('保存数据', '确认?',function (button,text){if(button == 'yes'){
-				Ext.Ajax.request( {
-					  url : path + "/deviceqr!updateNickName.action",
-					  method : 'post',
-					  params : {
-					   newName : newName,
-					   did : _id
-					  },
-					  success : function(response, options) {
-					   var o = Ext.util.JSON.decode(response.responseText);
-					   //alert(o.i_type);
-					   if(o.i_type && "success"== o.i_type){
-					   	
-					   }else{
-					   	   Ext.Msg.alert('提示', '保存失败'); 
-					   }
-					  },
-					  failure : function() {
-					  	
-					  }
-		 		});
-			}});
-		}
-	}
-	
-	function deleteUser(id){
-		Ext.Msg.confirm('删除数据', '确认?',function (button,text){if(button == 'yes'){
-			Ext.Ajax.request({
-				  url : path + "/user!deleteUser.action",
-				  method : 'post',
-				  params : {
-					  userId:id
-				  },
-				  success : function(response, options) {
-				   var o = Ext.util.JSON.decode(response.responseText);
-				   if(o.i_type && "success"== o.i_type){
-					   reloadData();
-				   }else{
-				   	   Ext.Msg.alert('提示', o.i_msg); 
-				   }
-				  },
-				  failure : function() {
-					  Ext.Msg.alert('提示', '删除失败'); 
-				  }
-	 		});
-		}});
-		
 	}

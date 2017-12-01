@@ -21,13 +21,13 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.xh.mgr.model.UserLogin;
-import com.xh.mgr.util.ToolUtils;
 import com.xz.common.Page;
 import com.xz.entity.CategoryTreeBean;
 import com.xz.entity.CategoryTreeBeanCk;
 import com.xz.entity.ModuleStoreBean;
+import com.xz.entity.UserLogin;
 import com.xz.entity.UserRole;
+import com.xz.service.OperateHistoryService;
 import com.xz.service.UserService;
 
 @RequestMapping("user")
@@ -35,6 +35,8 @@ import com.xz.service.UserService;
 public class UserController extends BaseController {
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private OperateHistoryService operateHistoryService;
 	
 	@RequestMapping("getTree")
 	@ResponseBody
@@ -232,7 +234,7 @@ public class UserController extends BaseController {
 		printData(response, sb.toString());
 	}
 	
-	@RequestMapping("listRole")
+	@RequestMapping("editUser")
 	@ResponseBody
 	public void editUser(HttpServletRequest request,HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException{
 		HttpSession session=request.getSession();
@@ -281,7 +283,7 @@ public class UserController extends BaseController {
 						user.setUserPassword(userPwd);
 					}
 					user.setUserName(userName);
-					user.setUserRole(role + "");
+					user.setUserRole(role);
 					user.setId(userId);
 					try {
 						userService.editUser(user);
@@ -302,7 +304,206 @@ public class UserController extends BaseController {
 			map.put("i_type", "error");
 			map.put("i_msg", "保存失败：" + msg);
 		}
-		this.printData(getResponse(), mapper.writeValueAsString(map));
+		printData(response, mapper.writeValueAsString(map));
 	}
 	
+	@RequestMapping("updatePwd")
+	@ResponseBody
+	public void updatePwd(HttpServletRequest request,HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException{
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> map = new HashMap<String, String>();
+		HttpSession session=request.getSession();
+		String oldpwd = request.getParameter("oldpwd");
+		String newpwd = request.getParameter("newpwd");
+		String userName = (String)session.getAttribute("userName");
+		String userId = (String)session.getAttribute("userId");
+		String msg = null;
+		if(userService.checkUser(userName, oldpwd)){
+			msg = "原密码输入错误";
+		}else{
+			try {
+				userService.updatePwd(userId,userName, newpwd);
+			} catch (Exception e) {
+				e.printStackTrace();
+				msg = "密码重置错误："+e.getMessage();
+			}
+		}
+		if(msg == null){
+			map.put("i_type", "success");
+			map.put("i_msg", "");
+		}else{
+			map.put("i_type", "error");
+			map.put("i_msg", msg);
+		}
+		operateHistoryService.insertOH(request,(String)session.getAttribute("userId") , "9", msg,msg==null?1:0);
+		printData(response, mapper.writeValueAsString(map));
+	}
+	
+	@RequestMapping("updateUserAuth")
+	@ResponseBody
+	public void updateUserAuth(HttpServletRequest request,HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException{
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> map = new HashMap<String, String>();
+		String menuIds = request.getParameter("ids");
+		String roleId = request.getParameter("roleId");
+		HttpSession session=request.getSession();
+		String menuId[] = menuIds.split(",");//
+		String msg = null;
+		if(StringUtils.isNotBlank(menuIds) && StringUtils.isNotBlank(roleId)){
+			try {
+				userService.DeleteRoleAuth(roleId);
+			} catch (Exception e) {
+				e.printStackTrace();
+				msg = e.getMessage();
+			}
+			if (msg == null) {
+				for (String temId : menuId) {
+					try {
+						userService.addRoleAuth(roleId, temId);
+					} catch (Exception e) {
+						e.printStackTrace();
+						msg = e.getMessage();
+					}
+				}
+			}
+		}else{//没有任何权限
+			msg = "参数有误";
+		}
+		if(msg == null){
+			map.put("i_type", "success");
+			map.put("i_msg", "");
+		}else{
+			map.put("i_type", "error");
+			map.put("i_msg", msg);
+		}
+		operateHistoryService.insertOH(request,(String)session.getAttribute("userId") , "16", msg,msg==null?1:0);
+		this.printData(response, mapper.writeValueAsString(map));
+	}
+	
+	@RequestMapping("deleteRole")
+	@ResponseBody
+	public void deleteRole(HttpServletRequest request,HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException{
+		HttpSession session=request.getSession();
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> map = new HashMap<String, String>();
+		String roleId = request.getParameter("roleId");
+		String sessionRoleId = (String)session.getAttribute("userRole");
+		String msg = null;
+		if(sessionRoleId.equals(roleId)){
+			msg = "当前角色不能删除!";
+		}
+		if (msg  == null) {
+			if (StringUtils.isNotBlank(roleId)) {
+				try {
+					userService.deleteRole(roleId);
+				} catch (Exception e) {
+					e.printStackTrace();
+					msg = e.getMessage();
+				}
+				if (msg == null) {
+					try {
+						userService.deleteUserByRoleId(roleId);
+					} catch (Exception e) {
+						e.printStackTrace();
+						msg = e.getMessage();
+					}
+				}
+			} else {
+				msg = "参数为空！";
+			}
+		}
+		if (msg == null) {
+			map.put("i_type", "success");
+			map.put("i_msg", "");
+		} else {
+			map.put("i_type", "error");
+			map.put("i_msg", "操作失败：" + msg);
+		}
+		operateHistoryService.insertOH(request,(String)session.getAttribute("userId") , "15", msg,msg==null?1:0);
+		this.printData(response, mapper.writeValueAsString(map));
+	}
+	
+	@RequestMapping("editRole")
+	@ResponseBody
+	public void editRole(HttpServletRequest request,HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException{
+		HttpSession session=request.getSession();
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> map = new HashMap<String, String>();
+		String roleId = request.getParameter("roleId");
+		String roleName = request.getParameter("roleName");
+		String msg = null;
+		if(!StringUtils.isNotBlank(roleName)){
+			msg = "参数有误!";
+		}
+		if(msg == null){
+			if(StringUtils.isNotBlank(roleId)){//roleId 不为空，编辑角色
+				if(!userService.isExitRole(roleName)){//检查是否存在重复角色名
+					try {
+						userService.editRole(roleId,roleName);
+					} catch (Exception e) {
+						e.printStackTrace();
+						msg = e.getMessage();
+					}
+				}else{
+					msg = roleName + "用户名已存在";
+				}
+				operateHistoryService.insertOH(request,(String)session.getAttribute("userId") , "13", msg,msg==null?1:0);
+			}else{//添加用户
+				if(!userService.isExitRole(roleName)){//检查是否存在重复角色名
+					try {
+						userService.addRole(roleName);
+					} catch (Exception e) {
+						e.printStackTrace();
+						msg = e.getMessage();
+					}
+				}else{
+					msg = roleName + "用户名已存在";
+				}
+				operateHistoryService.insertOH(request,(String)session.getAttribute("userId") , "14", msg,msg==null?1:0);
+			}
+		}
+		if (msg == null) {
+			map.put("i_type", "success");
+			map.put("i_msg", "");
+		} else {
+			map.put("i_type", "error");
+			map.put("i_msg", "保存失败：" + msg);
+		}
+		this.printData(response, mapper.writeValueAsString(map));
+	}
+	
+	@RequestMapping("deleteUser")
+	@ResponseBody
+	public void deleteUser(HttpServletRequest request,HttpServletResponse response) throws JsonGenerationException, JsonMappingException, IOException{
+		HttpSession session=request.getSession();
+		String msg = null;
+		ObjectMapper mapper = new ObjectMapper();
+		Map<String, String> map = new HashMap<String, String>();
+		String userId = request.getParameter("userId");
+		String sessionUserID = (String)session.getAttribute("userId");
+		if(sessionUserID.equals(userId)){
+			msg = "当前用户不能删除！";
+		}
+		if (msg == null) {
+			if (StringUtils.isNotBlank(userId)) {
+				try {
+					userService.deleteUser(userId);
+				} catch (Exception e) {
+					e.printStackTrace();
+					msg = e.getMessage();
+				}
+			} else {
+				msg = "参数为空！";
+			}
+		}
+		if (msg == null) {
+			map.put("i_type", "success");
+			map.put("i_msg", "");
+		} else {
+			map.put("i_type", "error");
+			map.put("i_msg", "删除失败：" + msg);
+		}
+		operateHistoryService.insertOH(request,(String)session.getAttribute("userId") , "12", msg,msg==null?1:0);
+		this.printData(response, mapper.writeValueAsString(map));
+	}
 }

@@ -151,39 +151,10 @@
 		});
 	}
 	
-	
-	function saveInfo(oldName,newName,_id){
-		//console.log(_id);
-		if(oldName != newName){
-			Ext.Msg.confirm('保存数据', '确认?',function (button,text){if(button == 'yes'){
-				Ext.Ajax.request( {
-					  url : path + "/deviceqr!updateNickName.action",
-					  method : 'post',
-					  params : {
-					   newName : newName,
-					   did : _id
-					  },
-					  success : function(response, options) {
-					   var o = Ext.util.JSON.decode(response.responseText);
-					   //alert(o.i_type);
-					   if(o.i_type && "success"== o.i_type){
-					   	
-					   }else{
-					   	   Ext.Msg.alert('提示', '保存失败'); 
-					   }
-					  },
-					  failure : function() {
-					  	
-					  }
-		 		});
-			}});
-		}
-	}
-	
 	function deleteRole(id){
 		Ext.Msg.confirm('tip', '删除角色同时会删除相应的用户?',function (button,text){if(button == 'yes'){
 			Ext.Ajax.request({
-				  url : path + "/user!deleteRole.action",
+				  url : path + "/user/deleteRole.action",
 				  method : 'post',
 				  params : {
 					  roleId:id
@@ -237,7 +208,7 @@
     					return;
     				}
     				Ext.Ajax.request({
-    					  url : path + "/user!editRole.action",
+    					  url : path + "/user/editRole.action",
     					  method : 'post',
     					  params : {
     						  buttonId:'118',//根据menu表的ID属性
@@ -385,7 +356,7 @@
       					return;
       				}
       				Ext.Ajax.request({
-  					  url : path + "/user!updateUserAuth.action",
+  					  url : path + "/user/updateUserAuth.action",
   					  method : 'post',
   					  params : {
   						  roleId:roleId,

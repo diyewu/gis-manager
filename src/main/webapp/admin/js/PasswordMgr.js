@@ -16,7 +16,7 @@
             		return;
             	}
 				Ext.Ajax.request( {
-					  url : path + "/user!updatePwd.action",
+					  url : path + "/user/updatePwd.action",
 					  method : 'post',
 					  params : {
 						  oldpwd : oldpwd,

@@ -146,7 +146,7 @@
 				handler : function() {
 					showEditUser();
 				}
-			},{
+			}/*,{
 				text : '设置前台登陆',
 				iconCls : 'Cog',
 				handler : function() {
@@ -158,7 +158,7 @@
 				handler : function() {
 					setUserCanLogin(1);
 				}
-			}]
+			}*/]
 
         });  
         grid = new Ext.grid.EditorGridPanel({ 
@@ -221,39 +221,10 @@
 		});
 	}
 	
-	
-	function saveInfo(oldName,newName,_id){
-		//console.log(_id);
-		if(oldName != newName){
-			Ext.Msg.confirm('保存数据', '确认?',function (button,text){if(button == 'yes'){
-				Ext.Ajax.request( {
-					  url : path + "/deviceqr!updateNickName.action",
-					  method : 'post',
-					  params : {
-					   newName : newName,
-					   did : _id
-					  },
-					  success : function(response, options) {
-					   var o = Ext.util.JSON.decode(response.responseText);
-					   //alert(o.i_type);
-					   if(o.i_type && "success"== o.i_type){
-					   	
-					   }else{
-					   	   Ext.Msg.alert('提示', '保存失败'); 
-					   }
-					  },
-					  failure : function() {
-					  	
-					  }
-		 		});
-			}});
-		}
-	}
-	
 	function deleteUser(id){
 		Ext.Msg.confirm('删除数据', '确认?',function (button,text){if(button == 'yes'){
 			Ext.Ajax.request({
-				  url : path + "/user!deleteUser.action",
+				  url : path + "/user/deleteUser.action",
 				  method : 'post',
 				  params : {
 					  userId:id
@@ -450,7 +421,7 @@ function setUserCanLogin(value){
 	}
 	Ext.Msg.confirm('确认设置', '确认?',function (button,text){if(button == 'yes'){
 		Ext.Ajax.request( {
-			  url : path + "/user!setConsoleUserAllowLogin.action",
+			  url : path + "/user/setConsoleUserAllowLogin.action",
 			  method : 'post',
 			  params : {
 			   ids : dids,
